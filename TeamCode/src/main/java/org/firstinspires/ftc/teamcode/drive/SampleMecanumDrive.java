@@ -84,7 +84,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private LinkedList<Pose2d> poseHistory;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    private DcMotorEx FrontLeft, BackLeft, BackRight, FrontRight;
     private List<DcMotorEx> motors;
     private BNO055IMU imu;
 
@@ -129,12 +129,12 @@ public class SampleMecanumDrive extends MecanumDrive {
         // upward (normal to the floor) using a command like the following:
         // BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
 
-        leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        FrontLeft = hardwareMap.get(DcMotorEx.class, "FrontLeft");
+        BackLeft = hardwareMap.get(DcMotorEx.class, "BackLeft");
+        BackRight = hardwareMap.get(DcMotorEx.class, "BackRight");
+        FrontRight = hardwareMap.get(DcMotorEx.class, "FrontRight");
 
-        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
+        motors = Arrays.asList(FrontLeft, BackLeft, BackRight, FrontRight);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
@@ -376,10 +376,10 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public void setMotorPowers(double v, double v1, double v2, double v3) {
-        leftFront.setPower(v);
-        leftRear.setPower(v1);
-        rightRear.setPower(v2);
-        rightFront.setPower(v3);
+        FrontLeft.setPower(v);
+        BackLeft.setPower(v1);
+        BackRight.setPower(v2);
+        FrontRight.setPower(v3);
     }
 
     @Override

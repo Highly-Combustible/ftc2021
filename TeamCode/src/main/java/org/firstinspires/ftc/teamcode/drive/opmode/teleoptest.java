@@ -1,3 +1,4 @@
+/*
 package org.firstinspires.ftc.teamcode.drive.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -8,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.CRServo;
-
 @TeleOp(name = "teleoptest", group = "teleOP")
 public class teleoptest extends LinearOpMode {
     private DcMotor back_right;
@@ -23,10 +23,11 @@ public class teleoptest extends LinearOpMode {
     private Servo sideClaw;
     private Servo sideClawDeploy;
      **/
-    /**
-     * This function is executed when this Op Mode is selected from the Driver Station.
-     */
-    @Override
+
+    // * This function is executed when this Op Mode is selected from the Driver Station.
+     
+
+ /*   @Override
     public void runOpMode() {
         back_right = hardwareMap.dcMotor.get("FrontRight");
         back_left = hardwareMap.dcMotor.get("FrontLeft");
@@ -47,7 +48,7 @@ public class teleoptest extends LinearOpMode {
         // Reverse one of the drive motors.
         //back_right.setDirection(DcMotorSimple.Direction.REVERSE);
         //back_left.setDirection(DcMotorSimple.Direction.REVERSE);
-        front_right.setDirection(DcMotorSimple.Direction.REVERSE);
+  /*      front_right.setDirection(DcMotorSimple.Direction.REVERSE);
         front_left.setDirection(DcMotorSimple.Direction.REVERSE);
         waitForStart();
         if (opModeIsActive()) {
@@ -290,3 +291,4 @@ public class teleoptest extends LinearOpMode {
         //claw.setPosition(0.65);
     }
 }
+ */
