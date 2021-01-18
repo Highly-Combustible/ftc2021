@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode.drive.opmode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -9,13 +8,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.CRServo;
+
 @TeleOp(name = "TeleOP Test", group = "teleOP")
 public class teleoptest extends LinearOpMode {
     private DcMotor right_Front;
     private DcMotor right_Back;
     private DcMotor left_Front;
     private DcMotor left_Back;
-    private DcMotor intake_motor;
+    private DcMotor intake_Motor;
+    private DcMotor index_Motor;
 
     // This function is executed when this Op Mode is selected from the Driver Station.
 
@@ -26,7 +27,8 @@ public class teleoptest extends LinearOpMode {
         right_Back = hardwareMap.dcMotor.get("BackRight");
         left_Front = hardwareMap.dcMotor.get("FrontLeft");
         left_Back = hardwareMap.dcMotor.get("BackLeft");
-        intake_motor = hardwareMap.dcMotor.get("intakeMotor");
+        intake_Motor = hardwareMap.dcMotor.get("intakeMotor");
+        index_Motor = hardwareMap.dcMotor.get("indexMotor");
 
         //right_Front.setDirection(DcMotorSimple.Direction.REVERSE);
         //right_Back.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -42,7 +44,7 @@ public class teleoptest extends LinearOpMode {
                 double LPY = -gamepad1.left_stick_y;
                 double LPX = gamepad1.left_stick_x;
                 double RPX = gamepad1.right_stick_x;
-                
+
                 right_Front.setPower(LPY - LPX - RPX);
                 right_Back.setPower(LPY + LPX - RPX);
                 left_Front.setPower(LPY + LPX + RPX);
@@ -56,15 +58,26 @@ public class teleoptest extends LinearOpMode {
 
                 // speed that dpad controls go at; joy stick speed devided by this
                 if (gamepad1.a) {
-                    intake_motor.setPower(1);
+                    intake_Motor.setPower(1);
                 }
 
                 else if (gamepad1.y) {
-                    intake_motor.setPower (-1);
+                    intake_Motor.setPower (-1);
                 }
 
                 else {
-                    intake_motor.setPower(0);
+                    intake_Motor.setPower(0);
+                }
+
+                if (gamepad1.x) {
+                    index_Motor.setPower(1);
+                }
+
+                else if (gamepad1.b) {
+                    index_Motor.setPower(-1);
+                }
+                else {
+                    index_Motor.setPower(0);
                 }
 
             }
