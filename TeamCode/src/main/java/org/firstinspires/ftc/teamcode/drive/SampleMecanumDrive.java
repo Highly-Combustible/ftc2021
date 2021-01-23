@@ -85,7 +85,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     private LinkedList<Pose2d> poseHistory;
 
-    private DcMotorEx FrontLeft, BackLeft, BackRight, FrontRight;
+    private DcMotorEx FrontLeft, BackLeft, BackRight, FrontRight, intakeMotor;
 
     private List<DcMotorEx> motors;
     private BNO055IMU imu;
@@ -137,8 +137,9 @@ public class SampleMecanumDrive extends MecanumDrive {
         BackLeft = hardwareMap.get(DcMotorEx.class, "BackLeft");
         BackRight = hardwareMap.get(DcMotorEx.class, "BackRight");
         FrontRight = hardwareMap.get(DcMotorEx.class, "FrontRight");
+        intakeMotor = hardwareMap.get(DcMotorEx.class, "intakeMotor");
 
-        motors = Arrays.asList(FrontLeft, BackLeft, BackRight, FrontRight);
+        motors = Arrays.asList(FrontLeft, BackLeft, BackRight, FrontRight, intakeMotor);
 
         for (DcMotorEx motor : motors) {
             MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
