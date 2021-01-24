@@ -7,6 +7,8 @@ import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.RingDetector;
@@ -27,6 +29,7 @@ public class autoTest extends LinearOpMode {
     private DcMotor left_Back;
     private DcMotor intakeMotor;
     private DcMotor index_Motor;
+    private DcMotor firing_Motor;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -38,6 +41,10 @@ public class autoTest extends LinearOpMode {
         left_Back = hardwareMap.dcMotor.get("BackLeft");
         intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
         index_Motor = hardwareMap.dcMotor.get("indexMotor");
+        firing_Motor = hardwareMap.dcMotor.get("firingMotor");
+
+        //left_Back.setDirection(DcMotorSimple.Direction.REVERSE);
+        firing_Motor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -130,15 +137,40 @@ public class autoTest extends LinearOpMode {
                 .lineToSplineHeading(new Pose2d(12, -37, Math.toRadians(0)))
                 .build();
 
+
+
+
+
         drive.followTrajectory(traj1);
         drive.followTrajectory(traj2);
-        //shoot 3 rings
+        for (int i = 0; i < 3; i++) {
+            shoot(index_Motor, firing_Motor);
+        }
         drive.followTrajectory(traj3);
         drive.followTrajectory(traj4);
-        //shoot 3 more if case4 otherwise shoot 1 more if case 1 otherwise don't shoot
+        if (org.firstinspires.ftc.teamcode.drive.RingDetector.height == RingDetector.Height.ONE) {
+            shoot(index_Motor, firing_Motor);
+        }
+        else if (org.firstinspires.ftc.teamcode.drive.RingDetector.height == RingDetector.Height.FOUR) {
+            for (int i = 0; i < 3; i++) {
+                shoot(index_Motor, firing_Motor);
+            }
+        }
         drive.followTrajectory(traj5);
 
 
 
     }
+
+    public void shoot(DcMotor index_Motor, DcMotor firing_Motor) {
+        firing_Motor.setPower(1);
+        sleep(1000);
+        index_Motor.setPower(-1);
+        firing_Motor.setPower(1);
+        sleep(1000);
+        firing_Motor.setPower(-1);
+        sleep(100);
+        firing_Motor.setPower(0);
+    }
+
 }
