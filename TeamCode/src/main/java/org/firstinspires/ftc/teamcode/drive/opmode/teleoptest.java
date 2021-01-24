@@ -23,8 +23,10 @@ public class teleoptest extends LinearOpMode {
     private DcMotor left_Front;
     private DcMotor left_Back;
     private DcMotor intake_Motor;
-    private DcMotor index_Motor;
+    private Servo index_Servo;
     private DcMotor firing_Motor;
+    private Servo turn_Servo;
+    private Servo claw_Servo;
     private autoTest autoTest;
 
     // This function is executed when this Op Mode is selected from the Driver Station.
@@ -38,15 +40,17 @@ public class teleoptest extends LinearOpMode {
 
         myLocalizer.setPoseEstimate(new Pose2d(12, -37, Math.toRadians(0)));
 
-        Pose2d shooterPos = new Pose2d(12, -37, Math.toRadians(270));
+        Pose2d shooterPos = new Pose2d(12, -37, Math.toRadians(300));
 
         right_Front = hardwareMap.dcMotor.get("FrontRight");
         right_Back = hardwareMap.dcMotor.get("BackRight");
         left_Front = hardwareMap.dcMotor.get("FrontLeft");
         left_Back = hardwareMap.dcMotor.get("BackLeft");
         intake_Motor = hardwareMap.dcMotor.get("intakeMotor");
-        index_Motor = hardwareMap.dcMotor.get("indexMotor");
+        index_Servo = hardwareMap.servo.get("indexServo");
         firing_Motor = hardwareMap.dcMotor.get("firingMotor");
+        turn_Servo = hardwareMap.servo.get("turnServo");
+        claw_Servo = hardwareMap.servo.get("clawServo");
 
         //right_Front.setDirection(DcMotorSimple.Direction.REVERSE);
         //right_Back.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -80,36 +84,60 @@ public class teleoptest extends LinearOpMode {
                 Pose2d currentPose = drive.getPoseEstimate();
                 drive.update();
 
-                // speed that dpad controls go at; joy stick speed devided by this
+                // speed that dpad controls go at; joy stick speed divided by this
                 if (gamepad1.a) {
-                    intake_Motor.setPower(1);
+                    intake_Motor.setPower(0.8);
                 }
 
                 else if (gamepad1.y) {
-                    intake_Motor.setPower (-1);
+                    intake_Motor.setPower (-0.8);
                 }
 
                 else {
                     intake_Motor.setPower(0);
                 }
-
+/*
                 if (gamepad1.x) {
                     autoTest.shoot(index_Motor, firing_Motor);
                 }
+*/
+                if (gamepad1.dpad_down) {
+                    index_Servo.setPosition(1);
+                }
 
                 else if (gamepad1.b) {
-                    index_Motor.setPower(-1);
-                }
-                else {
-                    index_Motor.setPower(0);
+                    index_Servo.setPosition(0.4);
                 }
 
+                else {
+                    index_Servo.setPosition(0.8);
+                }
+             /*   else {
+                    index_Servo.setPower(0);
+                }
+*/
                 if (gamepad1.right_bumper) {
                     firing_Motor.setPower(1);
                 }
 
                 else {
                     firing_Motor.setPower(0);
+                }
+
+                if (gamepad1.dpad_left) {
+                    turn_Servo.setPosition(0.1);
+                }
+
+                else if (gamepad1.dpad_right){
+                    turn_Servo.setPosition(0.4);
+                }
+
+                if (gamepad1.right_trigger >= 1) {
+                    claw_Servo.setPosition(0.95);
+                }
+
+                else if (gamepad1.left_trigger >= 1) {
+                    claw_Servo.setPosition(0.8);
                 }
 
                 if (gamepad1.dpad_up) {
