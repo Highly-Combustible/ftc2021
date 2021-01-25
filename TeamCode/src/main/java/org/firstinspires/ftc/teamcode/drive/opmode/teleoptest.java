@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.drive.opmode;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -24,7 +25,7 @@ public class teleoptest extends LinearOpMode {
     private DcMotor left_Back;
     private DcMotor intake_Motor;
     private Servo index_Servo;
-    private DcMotor firing_Motor;
+    private DcMotorEx firing_Motor;
     private Servo turn_Servo;
     private Servo claw_Servo;
     private autoTest autoTest;
@@ -42,13 +43,13 @@ public class teleoptest extends LinearOpMode {
 
         Pose2d shooterPos = new Pose2d(12, -37, Math.toRadians(300));
 
-        right_Front = hardwareMap.dcMotor.get("FrontRight");
-        right_Back = hardwareMap.dcMotor.get("BackRight");
-        left_Front = hardwareMap.dcMotor.get("FrontLeft");
-        left_Back = hardwareMap.dcMotor.get("BackLeft");
-        intake_Motor = hardwareMap.dcMotor.get("intakeMotor");
+        right_Front = hardwareMap.get(DcMotor.class, "FrontRight");
+        right_Back = hardwareMap.get(DcMotor.class, "BackRight");
+        left_Front = hardwareMap.get(DcMotor.class, "FrontLeft");
+        left_Back = hardwareMap.get(DcMotor.class, "BackLeft");
+        intake_Motor = hardwareMap.get(DcMotor.class, "intakeMotor");
         index_Servo = hardwareMap.servo.get("indexServo");
-        firing_Motor = hardwareMap.dcMotor.get("firingMotor");
+        firing_Motor = hardwareMap.get(DcMotorEx.class, "firingMotor");
         turn_Servo = hardwareMap.servo.get("turnServo");
         claw_Servo = hardwareMap.servo.get("clawServo");
 
@@ -117,11 +118,11 @@ public class teleoptest extends LinearOpMode {
                 }
 */
                 if (gamepad1.right_bumper) {
-                    firing_Motor.setPower(1);
+                    firing_Motor.setVelocity((6000 * 28) / 60);
                 }
 
                 else {
-                    firing_Motor.setPower(0);
+                    firing_Motor.setVelocity(0);
                 }
 
                 if (gamepad1.dpad_left) {
