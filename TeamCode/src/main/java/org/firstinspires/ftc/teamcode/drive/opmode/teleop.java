@@ -17,8 +17,8 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 
-@TeleOp(name = "TeleOP Test", group = "teleOP")
-public class teleoptest extends LinearOpMode {
+@TeleOp(name = "TeleOP", group = "teleOP")
+public class teleop extends LinearOpMode {
     private DcMotor right_Front;
     private DcMotor right_Back;
     private DcMotor left_Front;
@@ -41,15 +41,15 @@ public class teleoptest extends LinearOpMode {
 
         myLocalizer.setPoseEstimate(new Pose2d(12, -37, Math.toRadians(0)));
 
-        Pose2d shooterPos = new Pose2d(12, -37, Math.toRadians(300));
+        Pose2d shooterPos = new Pose2d(0, -37, Math.toRadians(280));
 
         right_Front = hardwareMap.get(DcMotor.class, "FrontRight");
         right_Back = hardwareMap.get(DcMotor.class, "BackRight");
         left_Front = hardwareMap.get(DcMotor.class, "FrontLeft");
         left_Back = hardwareMap.get(DcMotor.class, "BackLeft");
         intake_Motor = hardwareMap.get(DcMotor.class, "intakeMotor");
-        index_Servo = hardwareMap.servo.get("indexServo");
         firing_Motor = hardwareMap.get(DcMotorEx.class, "firingMotor");
+        index_Servo = hardwareMap.servo.get("indexServo");
         turn_Servo = hardwareMap.servo.get("turnServo");
         claw_Servo = hardwareMap.servo.get("clawServo");
 
@@ -87,21 +87,21 @@ public class teleoptest extends LinearOpMode {
 
                 // speed that dpad controls go at; joy stick speed divided by this
                 if (gamepad1.a) {
-                    intake_Motor.setPower(0.8);
+                    intake_Motor.setPower(1);
                 }
 
                 else if (gamepad1.y) {
-                    intake_Motor.setPower (-0.8);
+                    intake_Motor.setPower (-0.6);
                 }
 
                 else {
                     intake_Motor.setPower(0);
                 }
-/*
+
                 if (gamepad1.x) {
-                    autoTest.shoot(index_Motor, firing_Motor);
+                    autoTest.shoot(index_Servo, firing_Motor);
                 }
-*/
+
                 if (gamepad1.dpad_down) {
                     index_Servo.setPosition(1);
                 }
@@ -113,10 +113,7 @@ public class teleoptest extends LinearOpMode {
                 else {
                     index_Servo.setPosition(0.8);
                 }
-             /*   else {
-                    index_Servo.setPower(0);
-                }
-*/
+
                 if (gamepad1.right_bumper) {
                     firing_Motor.setVelocity((6000 * 28) / 60);
                 }
@@ -141,11 +138,13 @@ public class teleoptest extends LinearOpMode {
                     claw_Servo.setPosition(0.8);
                 }
 
-                if (gamepad1.dpad_up) {
+               /* if (gamepad1.dpad_up) {
                     Trajectory teletraj1 = drive.trajectoryBuilder(currentPose)
                     .lineToSplineHeading(new Pose2d(shooterPos.getX(), shooterPos.getY(), shooterPos.getHeading()))
                     .build();
-                }
+
+                    drive.followTrajectory(teletraj1);
+                } */
 
             }
         }

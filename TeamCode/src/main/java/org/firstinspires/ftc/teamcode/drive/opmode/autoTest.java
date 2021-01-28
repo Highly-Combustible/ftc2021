@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.*;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.RingDetector;
@@ -28,8 +29,9 @@ public class autoTest extends LinearOpMode {
     private DcMotor left_Front;
     private DcMotor left_Back;
     private DcMotor intakeMotor;
-    private DcMotor index_Motor;
     private DcMotor firing_Motor;
+    private Servo index_Servo;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -40,8 +42,8 @@ public class autoTest extends LinearOpMode {
         left_Front = hardwareMap.dcMotor.get("FrontLeft");
         left_Back = hardwareMap.dcMotor.get("BackLeft");
         intakeMotor = hardwareMap.dcMotor.get("intakeMotor");
-        index_Motor = hardwareMap.dcMotor.get("indexMotor");
         firing_Motor = hardwareMap.dcMotor.get("firingMotor");
+        index_Servo = hardwareMap.servo.get("indexServo");
 
         //left_Back.setDirection(DcMotorSimple.Direction.REVERSE);
         firing_Motor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -144,16 +146,16 @@ public class autoTest extends LinearOpMode {
         drive.followTrajectory(traj1);
         drive.followTrajectory(traj2);
         for (int i = 0; i < 3; i++) {
-            shoot(index_Motor, firing_Motor);
+            shoot(index_Servo, firing_Motor);
         }
         drive.followTrajectory(traj3);
         drive.followTrajectory(traj4);
         if (org.firstinspires.ftc.teamcode.drive.RingDetector.height == RingDetector.Height.ONE) {
-            shoot(index_Motor, firing_Motor);
+            shoot(index_Servo, firing_Motor);
         }
         else if (org.firstinspires.ftc.teamcode.drive.RingDetector.height == RingDetector.Height.FOUR) {
             for (int i = 0; i < 3; i++) {
-                shoot(index_Motor, firing_Motor);
+                shoot(index_Servo, firing_Motor);
             }
         }
         drive.followTrajectory(traj5);
@@ -162,14 +164,20 @@ public class autoTest extends LinearOpMode {
 
     }
 
-    public void shoot(DcMotor index_Motor, DcMotor firing_Motor) {
+    public void shoot(Servo index_Servo, DcMotor firing_Motor) {
         firing_Motor.setPower(1);
-        sleep(1000);
-        index_Motor.setPower(-1);
-        firing_Motor.setPower(1);
-        sleep(1000);
+        sleep(1500);
+        for (int i = 0; i < 3; i++) {
+            index_Servo.setPosition(0.4);
+            firing_Motor.setPower(1);
+            sleep(300);
+            index_Servo.setPosition(0.9);
+            sleep(300);
+        }
+        firing_Motor.setPower(0);
+        sleep(200);
         firing_Motor.setPower(-1);
-        sleep(100);
+        sleep(200);
         firing_Motor.setPower(0);
     }
 
