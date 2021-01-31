@@ -102,7 +102,7 @@ public class teleop extends LinearOpMode {
                     autoTest.shoot(index_Servo, firing_Motor);
                 }
 
-                if (gamepad1.dpad_down) {
+                if (gamepad1.left_bumper) {
                     index_Servo.setPosition(1);
                 }
 
@@ -111,7 +111,7 @@ public class teleop extends LinearOpMode {
                 }
 
                 else {
-                    index_Servo.setPosition(0.8);
+                    index_Servo.setPosition(0.9);
                 }
 
                 if (gamepad1.right_bumper) {
@@ -122,19 +122,19 @@ public class teleop extends LinearOpMode {
                     firing_Motor.setVelocity(0);
                 }
 
-                if (gamepad1.dpad_left) {
-                    turn_Servo.setPosition(0.1);
+               if (gamepad1.dpad_down) {
+                    turn_Servo.setPosition(0.05);
                 }
 
-                else if (gamepad1.dpad_right){
+                else if (gamepad1.dpad_up){
                     turn_Servo.setPosition(0.4);
                 }
 
-                if (gamepad1.right_trigger >= 1) {
-                    claw_Servo.setPosition(0.95);
+                if (gamepad1.right_trigger >= 0.5) {
+                    claw_Servo.setPosition(1);
                 }
 
-                else if (gamepad1.left_trigger >= 1) {
+                else if (gamepad1.left_trigger >= 0.5) {
                     claw_Servo.setPosition(0.8);
                 }
 
