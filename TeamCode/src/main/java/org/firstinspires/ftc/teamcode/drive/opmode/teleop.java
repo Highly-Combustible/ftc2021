@@ -39,9 +39,9 @@ public class teleop extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         autoTest = new autoTest();
 
-        myLocalizer.setPoseEstimate(new Pose2d(12, -37, Math.toRadians(0)));
+        myLocalizer.setPoseEstimate(new Pose2d(0, -37, Math.toRadians(180)));
 
-        Pose2d shooterPos = new Pose2d(0, -37, Math.toRadians(280));
+        Pose2d shooterPos = new Pose2d(-6, -40, Math.toRadians(75));
 
         right_Front = hardwareMap.get(DcMotor.class, "FrontRight");
         right_Back = hardwareMap.get(DcMotor.class, "BackRight");
@@ -58,6 +58,8 @@ public class teleop extends LinearOpMode {
         //left_Front.setDirection(DcMotorSimple.Direction.REVERSE);
         left_Back.setDirection(DcMotorSimple.Direction.REVERSE);
         firing_Motor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        firing_Motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
@@ -111,11 +113,11 @@ public class teleop extends LinearOpMode {
                 }
 
                 else {
-                    index_Servo.setPosition(0.9);
+                    index_Servo.setPosition(0.8);
                 }
 
                 if (gamepad1.right_bumper) {
-                    firing_Motor.setVelocity((6000 * 28) / 60);
+                    firing_Motor.setVelocity((4000 * 28) / 60);
                 }
 
                 else {
@@ -138,7 +140,7 @@ public class teleop extends LinearOpMode {
                     claw_Servo.setPosition(0.8);
                 }
 
-               /* if (gamepad1.dpad_up) {
+             /*  if (gamepad1.dpad_up) {
                     Trajectory teletraj1 = drive.trajectoryBuilder(currentPose)
                     .lineToSplineHeading(new Pose2d(shooterPos.getX(), shooterPos.getY(), shooterPos.getHeading()))
                     .build();
