@@ -39,9 +39,9 @@ public class teleop extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         autoTest = new autoTest();
 
-        myLocalizer.setPoseEstimate(new Pose2d(0, -37, Math.toRadians(180)));
-
-        Pose2d shooterPos = new Pose2d(-6, -40, Math.toRadians(75));
+        drive.setPoseEstimate(new Pose2d(0, -37, Math.toRadians(180)));
+        Pose2d shooterPos = new Pose2d(-3, -40, Math.toRadians(75));
+        Pose2d powerShot = new Pose2d(-3, -24, Math.toRadians(75));
 
         right_Front = hardwareMap.get(DcMotor.class, "FrontRight");
         right_Back = hardwareMap.get(DcMotor.class, "BackRight");
@@ -104,11 +104,7 @@ public class teleop extends LinearOpMode {
                     autoTest.shoot(index_Servo, firing_Motor);
                 }
 
-                if (gamepad1.left_bumper) {
-                    index_Servo.setPosition(1);
-                }
-
-                else if (gamepad1.b) {
+                if (gamepad1.b) {
                     index_Servo.setPosition(0.4);
                 }
 
@@ -117,14 +113,18 @@ public class teleop extends LinearOpMode {
                 }
 
                 if (gamepad1.right_bumper) {
-                    firing_Motor.setVelocity((4000 * 28) / 60);
+                    firing_Motor.setVelocity((3800 * 28) / 60);
+                }
+
+                else if (gamepad1.left_bumper) {
+                    firing_Motor.setVelocity((3300 * 28)/60);
                 }
 
                 else {
                     firing_Motor.setVelocity(0);
                 }
 
-               if (gamepad1.dpad_down) {
+                if (gamepad1.dpad_down) {
                     turn_Servo.setPosition(0.05);
                 }
 
@@ -146,8 +146,15 @@ public class teleop extends LinearOpMode {
                     .build();
 
                     drive.followTrajectory(teletraj1);
-                } */
+                }
 
+               if (gamepad1.back) {
+                   Trajectory teletraj2 = drive.trajectoryBuilder(currentPose)
+                   .lineToSplineHeading(new Pose2d(powerShot.getX(), powerShot.getY(), powerShot.getHeading()))
+                   .build();
+
+                   drive.followTrajectory(teletraj2);
+               } */
             }
         }
     }
