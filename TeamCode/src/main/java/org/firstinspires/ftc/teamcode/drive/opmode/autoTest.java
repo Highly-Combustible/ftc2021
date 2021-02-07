@@ -109,17 +109,10 @@ public class autoTest extends LinearOpMode {
                 */
                 .build();
 
-            Trajectory traj0zero = drive.trajectoryBuilder(startPose)
-                .lineTo(new Vector2d(-9, -24))
-                /*
-                .addDisplacementMarker(() -> {
-                    wobbleGoalServo.open();
-                }
-                */
-                .build();
 
-            Trajectory traj1 = drive.trajectoryBuilder(traj0.end())
-                    .lineToSplineHeading(new Pose2d(wobbleGoalPos.getX(), wobbleGoalPos.getY(), wobbleGoalPos.getHeading()))
+            Trajectory traj1 = drive.trajectoryBuilder(startPose)
+                    .splineToConstantHeading(new Vector2d(0, -24), 0)
+                    .splineToLinearHeading(new Pose2d(wobbleGoalPos.getX(), wobbleGoalPos.getY()), wobbleGoalPos.getHeading())
                     .addDisplacementMarker( () -> {
                         wobbleDrop(turn_Servo, claw_Servo);
                     })
@@ -140,15 +133,11 @@ public class autoTest extends LinearOpMode {
                     .strafeRight(10)
                     .build();
 
-            Trajectory traj1back = drive.trajectoryBuilder(traj1strafe.end())
-                    .back(10)
+            Trajectory trajwobbleone = drive.trajectoryBuilder(traj1strafe.end())
+                    .lineToSplineHeading(new Pose2d(-43, -50, Math.toRadians(90)))
                     .build();
 
-            Trajectory traj1goTo = drive.trajectoryBuilder(traj1back.end())
-                    .lineTo(new Vector2d(0, -55))
-                    .build();
-
-            Trajectory traj2 = drive.trajectoryBuilder(traj1strafe.end())
+            Trajectory traj2 = drive.trajectoryBuilder(trajwobbleone.end())
                     .lineToSplineHeading(new Pose2d(-6, -40, Math.toRadians(75)))
                     .build();
 
@@ -193,32 +182,8 @@ public class autoTest extends LinearOpMode {
                  }) */
                 .build();
 
-            Trajectory traj4 = drive.trajectoryBuilder(traj3one.end())
-                    .lineToSplineHeading(new Pose2d(-48, -38, Math.toRadians(0)))
-                    /*
-                    .addDisplacementMarker(() -> {
-                        wobbleGoalServo.close();
-                    }
-                    */
-                    //.lineToSplineHeading(new Pose2d(0, -37, Math.toRadians(270)))
-                    .build();
-
-            Trajectory traj5 = drive.trajectoryBuilder(traj4.end())
-                    .lineToSplineHeading(new Pose2d(wobbleGoalPos.getX(), wobbleGoalPos.getY(), Math.toRadians(0)))
-                    /*
-                    .addDisplacementMarker(() -> {
-                        wobbleGoalServo.open();
-                    }
-                    */
-                    //.lineToSplineHeading(new Pose2d(12, -37, Math.toRadians(0)))
-                    .build();
-
-         //   claw_Servo.setPosition(1);
-        //    turn_Servo.setPosition(0.4);
-            sleep(200);
 
             if (RingDetector.height == RingDetector.Height.ZERO || RingDetector.height == RingDetector.Height.NOT_SCANNED) {
-                //drive.followTrajectory(traj0zero);
                 drive.followTrajectory(traj1zero);
                 wobbleDrop(turn_Servo, claw_Servo);
                 sleep(200);
@@ -226,11 +191,15 @@ public class autoTest extends LinearOpMode {
                 drive.followTrajectory(traj2zero);
             }
             else if (RingDetector.height == RingDetector.Height.ONE) {
-                drive.followTrajectory(traj0);
+                //drive.followTrajectory(traj0);
                 drive.followTrajectory(traj1);
                 wobbleDrop(turn_Servo, claw_Servo);
-                sleep(200);
+              //  sleep(200);
                 drive.followTrajectory(traj1strafe);
+                turn_Servo.setPosition(0.05);
+                drive.followTrajectory(trajwobbleone);
+                wobbleGrab(turn_Servo, claw_Servo);
+
                 drive.followTrajectory(traj2);
             }
             else if (RingDetector.height == RingDetector.Height.FOUR) {
@@ -241,27 +210,17 @@ public class autoTest extends LinearOpMode {
                 claw_Servo.setPosition(0.8);
                 sleep(500);
                 drive.followTrajectory(traj1forward);
-                turn_Servo.setPosition(0.4);sleep(200);
+                turn_Servo.setPosition(0.4);
+                sleep(200);
                 drive.followTrajectory(traj2four);
             }
-           /* drive.followTrajectory(traj1);
-            wobbleDrop(turn_Servo, claw_Servo);
-            sleep(200);
-            drive.followTrajectory(traj1strafe); */
-            //sleep(200);
-            //drive.followTrajectory(traj1back);
-            //drive.followTrajectory(traj1goTo);
-            //drive.followTrajectory(traj2);
             chargeUp(firing_Motor);
             for (int i=0; i < 4; i++) { // Adjustment for servo weirdness
                 flickServo(index_Servo, firing_Motor);
             }
             chargeDown(firing_Motor);
-            //shoot(index_Servo, firing_Motor);
-            //drive.followTrajectory(traj3);
-            //drive.followTrajectory(traj4);
 
-            shoot(index_Servo, firing_Motor);
+            //shoot(index_Servo, firing_Motor);
 
             if (RingDetector.height == RingDetector.Height.ZERO || RingDetector.height == RingDetector.Height.NOT_SCANNED) {
                 drive.followTrajectory(traj3zero);
@@ -272,7 +231,6 @@ public class autoTest extends LinearOpMode {
             else if (RingDetector.height == RingDetector.Height.FOUR) {
                 drive.followTrajectory(traj3four);
             }
-            //drive.followTrajectory(traj5);
         }
 
 
@@ -298,24 +256,23 @@ public class autoTest extends LinearOpMode {
     }
 
     public void wobbleGrab (Servo turn_Servo, Servo claw_Servo) {
+        turn_Servo.setPosition(0.01);
         claw_Servo.setPosition(1);
         sleep(1000);
-        turn_Servo.setPosition(0.4);
+        turn_Servo.setPosition(0.6);
     }
 
     public void wobbleDrop (Servo turn_Servo, Servo claw_Servo) {
-        turn_Servo.setPosition(0.05);
+        turn_Servo.setPosition(0.01);
         sleep(500);
         claw_Servo.setPosition(0.8);
-        sleep(500);
-        turn_Servo.setPosition(0.4);
+        sleep(300);
+        turn_Servo.setPosition(0.6);
     }
 
     private void shootOnce(Servo index_Servo, DcMotorEx firing_Motor) {
             firing_Motor.setVelocity((4800 * 28) / 60);;
             sleep(1500);
-
-
             firing_Motor.setPower(0);
             sleep(200);
             firing_Motor.setPower(-1);

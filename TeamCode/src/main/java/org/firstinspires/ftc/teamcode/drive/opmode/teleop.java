@@ -125,11 +125,11 @@ public class teleop extends LinearOpMode {
                 }
 
                 if (gamepad1.dpad_down) {
-                    turn_Servo.setPosition(0.05);
+                    turn_Servo.setPosition(0.01);
                 }
 
                 else if (gamepad1.dpad_up){
-                    turn_Servo.setPosition(0.4);
+                    turn_Servo.setPosition(0.6);
                 }
 
                 if (gamepad1.right_trigger >= 0.5) {
@@ -140,7 +140,15 @@ public class teleop extends LinearOpMode {
                     claw_Servo.setPosition(0.8);
                 }
 
-             /*  if (gamepad1.dpad_up) {
+                if (gamepad1.dpad_left) {
+                    drive.turn(Math.toRadians(8));
+                }
+
+                if (gamepad1.dpad_right) {
+                     turn_Servo.setPosition(0.4);
+                }
+
+                /*  if (gamepad1.dpad_up) {
                     Trajectory teletraj1 = drive.trajectoryBuilder(currentPose)
                     .lineToSplineHeading(new Pose2d(shooterPos.getX(), shooterPos.getY(), shooterPos.getHeading()))
                     .build();
