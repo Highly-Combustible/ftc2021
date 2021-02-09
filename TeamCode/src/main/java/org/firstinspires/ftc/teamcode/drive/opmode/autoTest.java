@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.drive.RingDetector;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.opencv.core.Mat;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -79,7 +80,7 @@ public class autoTest extends LinearOpMode {
                         wobbleGoalPos = new Pose2d(-6, -63, Math.toRadians(255));
                         break;
                     case ONE:
-                        wobbleGoalPos = new Pose2d(36, -57, Math.toRadians(0));
+                        wobbleGoalPos = new Pose2d(42, -57, Math.toRadians(0));
                         break;
                     case FOUR:
                         wobbleGoalPos = new Pose2d(36, -70, Math.toRadians(256));
@@ -118,6 +119,8 @@ public class autoTest extends LinearOpMode {
                     })
                     .build();
 
+
+
         Trajectory traj1zero = drive.trajectoryBuilder(startPose)
                 .lineToSplineHeading(new Pose2d(wobbleGoalPos.getX(), wobbleGoalPos.getY(), wobbleGoalPos.getHeading()))
                 .addDisplacementMarker( () -> {
@@ -137,7 +140,15 @@ public class autoTest extends LinearOpMode {
                     .lineToSplineHeading(new Pose2d(-43, -50, Math.toRadians(90)))
                     .build();
 
-            Trajectory traj2 = drive.trajectoryBuilder(trajwobbleone.end())
+            Trajectory trajwobbletwo = drive.trajectoryBuilder(trajwobbleone.end())
+                    .lineToSplineHeading(new Pose2d(30, -60, Math.toRadians(0)))
+                    .build();
+
+            Trajectory wobbletwostrafe = drive.trajectoryBuilder(trajwobbletwo.end())
+                    .strafeRight(8)
+                    .build();
+
+            Trajectory traj2 = drive.trajectoryBuilder(wobbletwostrafe.end())
                     .lineToSplineHeading(new Pose2d(-6, -40, Math.toRadians(75)))
                     .build();
 
@@ -173,13 +184,6 @@ public class autoTest extends LinearOpMode {
 
             Trajectory traj3four = drive.trajectoryBuilder(traj2four.end())
                 .lineToSplineHeading(new Pose2d(0, -37, Math.toRadians(180)))
-                /* .addDisplacementMarker(() -> {
-                     intakeMotor.setPower(1);
-                 })
-                 .lineTo(new Vector2d(-37, -37))
-                 .addDisplacementMarker(() -> {
-                     intakeMotor.setPower(0);
-                 }) */
                 .build();
 
 
@@ -191,15 +195,15 @@ public class autoTest extends LinearOpMode {
                 drive.followTrajectory(traj2zero);
             }
             else if (RingDetector.height == RingDetector.Height.ONE) {
-                //drive.followTrajectory(traj0);
                 drive.followTrajectory(traj1);
                 wobbleDrop(turn_Servo, claw_Servo);
-              //  sleep(200);
                 drive.followTrajectory(traj1strafe);
                 turn_Servo.setPosition(0.05);
                 drive.followTrajectory(trajwobbleone);
                 wobbleGrab(turn_Servo, claw_Servo);
-
+                drive.followTrajectory(trajwobbletwo);
+                wobbleDrop(turn_Servo, claw_Servo);
+                drive.followTrajectory(wobbletwostrafe);
                 drive.followTrajectory(traj2);
             }
             else if (RingDetector.height == RingDetector.Height.FOUR) {
@@ -214,13 +218,12 @@ public class autoTest extends LinearOpMode {
                 sleep(200);
                 drive.followTrajectory(traj2four);
             }
+
             chargeUp(firing_Motor);
             for (int i=0; i < 4; i++) { // Adjustment for servo weirdness
                 flickServo(index_Servo, firing_Motor);
             }
             chargeDown(firing_Motor);
-
-            //shoot(index_Servo, firing_Motor);
 
             if (RingDetector.height == RingDetector.Height.ZERO || RingDetector.height == RingDetector.Height.NOT_SCANNED) {
                 drive.followTrajectory(traj3zero);
@@ -266,7 +269,7 @@ public class autoTest extends LinearOpMode {
         turn_Servo.setPosition(0.01);
         sleep(500);
         claw_Servo.setPosition(0.8);
-        sleep(300);
+        sleep(200);
         turn_Servo.setPosition(0.6);
     }
 
