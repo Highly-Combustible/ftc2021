@@ -100,7 +100,7 @@ public class autoTest extends LinearOpMode {
             webcam.stopStreaming();
             drive.setPoseEstimate(startPose);
 
-            //zero rings or not scanned
+            // zero rings/not scanned
 
             Trajectory GTB0out = drive.trajectoryBuilder(startPose)
                 .forward(12)
@@ -138,7 +138,7 @@ public class autoTest extends LinearOpMode {
                 .build();
 
 
-            //one ring
+            // one ring
             Trajectory GTB1 = drive.trajectoryBuilder(startPose)
                     .splineToConstantHeading(new Vector2d(0, -24), 0)
                     .splineToLinearHeading(new Pose2d(wobbleGoalPos.getX(), wobbleGoalPos.getY()), wobbleGoalPos.getHeading())
@@ -172,7 +172,7 @@ public class autoTest extends LinearOpMode {
                 .build();
 
 
-            //four rings
+            // four rings
             Trajectory GTB4 = drive.trajectoryBuilder(startPose)
                 .splineToConstantHeading(new Vector2d(0, -24), 0)
                 .splineToLinearHeading(new Pose2d(wobbleGoalPos.getX(), wobbleGoalPos.getY()), wobbleGoalPos.getHeading())
