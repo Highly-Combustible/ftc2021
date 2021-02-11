@@ -184,20 +184,29 @@ public class autoTest extends LinearOpMode {
             Trajectory GTB4 = drive.trajectoryBuilder(GTB4out.end())
                 .lineToSplineHeading(new Pose2d(wobbleGoalPos.getX(), wobbleGoalPos.getY(), wobbleGoalPos.getHeading()))
                 .addDisplacementMarker( () -> {
-                    wobbleDrop(turn_Servo, claw_Servo);
+                    wobbleDrop4(turn_Servo, claw_Servo);
                 })
                 .build();
 
             Trajectory GTB1StrafeOut4 = drive.trajectoryBuilder(GTB4.end())
                 .strafeRight(10)
+                .addDisplacementMarker( () -> {
+                    turn_Servo.setPosition(0.1);
+                })
                 .build();
 
             Trajectory GrabWobbleTwo4 = drive.trajectoryBuilder(GTB1StrafeOut4.end())
                 .lineToSplineHeading(new Pose2d(-38, -32, Math.toRadians(76.3)))
+                .addDisplacementMarker( () -> {
+                    wobbleGrab(turn_Servo, claw_Servo);
+                })
                 .build();
 
             Trajectory GTB2_4 = drive.trajectoryBuilder(GrabWobbleTwo4.end())
-                .lineToSplineHeading(new Pose2d(30, -67, Math.toRadians(256)))
+                .lineToSplineHeading(new Pose2d(32, -67, Math.toRadians(256)))
+                .addDisplacementMarker( () -> {
+                    wobbleDrop4(turn_Servo, claw_Servo);
+                })
                 .build();
 
             Trajectory GTB2StrafeOut4 = drive.trajectoryBuilder(GTB2_4.end())
@@ -206,6 +215,13 @@ public class autoTest extends LinearOpMode {
 
             Trajectory GoToShoot4 = drive.trajectoryBuilder(GTB2StrafeOut4.end())
                 .lineToSplineHeading(new Pose2d(-7, -38, Math.toRadians(75)))
+                .addDisplacementMarker( () -> {
+                    chargeUp(firing_Motor);
+                    for (int i=0; i < 5; i++) { // Adjustment for servo weirdness
+                        flickServo(index_Servo, firing_Motor);
+                    }
+                    chargeDown(firing_Motor);
+                })
                 .build();
 
             Trajectory Park4 = drive.trajectoryBuilder(GoToShoot4.end())
@@ -267,7 +283,7 @@ public class autoTest extends LinearOpMode {
                 drive.followTrajectory(GTB2StrafeOut0);
                 drive.followTrajectory(GoToShoot0);
                 chargeUp(firing_Motor);
-                for (int i=0; i < 4; i++) { // Adjustment for servo weirdness
+                for (int i=0; i < 5; i++) { // Adjustment for servo weirdness
                     flickServo(index_Servo, firing_Motor);
                 }
                 chargeDown(firing_Motor);
@@ -286,7 +302,7 @@ public class autoTest extends LinearOpMode {
                 drive.followTrajectory(GTB2BackOut1);
                 drive.followTrajectory(GoToShoot1);
                 chargeUp(firing_Motor);
-                for (int i=0; i < 4; i++) { // Adjustment for servo weirdness
+                for (int i=0; i < 5; i++) { // Adjustment for servo weirdness
                     flickServo(index_Servo, firing_Motor);
                 }
                 chargeDown(firing_Motor);
@@ -295,20 +311,11 @@ public class autoTest extends LinearOpMode {
             else if (RingDetector.height == RingDetector.Height.FOUR) {
                 drive.followTrajectory(GTB4out);
                 drive.followTrajectory(GTB4);
-                wobbleDrop(turn_Servo, claw_Servo);
                 drive.followTrajectory(GTB1StrafeOut4);
-                turn_Servo.setPosition(0.1);
                 drive.followTrajectory(GrabWobbleTwo4);
-                wobbleGrab(turn_Servo, claw_Servo);
                 drive.followTrajectory(GTB2_4);
-                wobbleDrop(turn_Servo, claw_Servo);
                 drive.followTrajectory(GTB2StrafeOut4);
                 drive.followTrajectory(GoToShoot4);
-                chargeUp(firing_Motor);
-                for (int i=0; i < 4; i++) { // Adjustment for servo weirdness
-                    flickServo(index_Servo, firing_Motor);
-                }
-                chargeDown(firing_Motor);
                 drive.followTrajectory(Park4);
             }
         }
@@ -348,6 +355,14 @@ public class autoTest extends LinearOpMode {
         claw_Servo.setPosition(0.8);
         sleep(200);
         turn_Servo.setPosition(0.6);
+        claw_Servo.setPosition(0.8);
+    }
+
+    public void wobbleDrop4 (Servo turn_Servo, Servo claw_Servo) {
+        turn_Servo.setPosition(0.05);
+        sleep(500);
+        claw_Servo.setPosition(0.8);
+        sleep(200);
         claw_Servo.setPosition(0.8);
     }
 
