@@ -125,7 +125,7 @@ public class teleop extends LinearOpMode {
                 }
 
                 if (gamepad1.dpad_down) {
-                    turn_Servo.setPosition(0.01);
+                    turn_Servo.setPosition(0.05);
                 }
 
                 else if (gamepad1.dpad_up){

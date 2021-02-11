@@ -74,16 +74,16 @@ public class autoTest extends LinearOpMode {
                 switch (org.firstinspires.ftc.teamcode.drive.RingDetector.height) {
 
                     case NOT_SCANNED:
-                        wobbleGoalPos = new Pose2d(-4, -63, Math.toRadians(255));
+                        wobbleGoalPos = new Pose2d(0, -61, Math.toRadians(255));
                         break;
                     case ZERO:
-                        wobbleGoalPos = new Pose2d(0, -59, Math.toRadians(255));
+                        wobbleGoalPos = new Pose2d(0, -61, Math.toRadians(255));
                         break;
                     case ONE:
                         wobbleGoalPos = new Pose2d(42, -57, Math.toRadians(0));
                         break;
                     case FOUR:
-                        wobbleGoalPos = new Pose2d(36, -72, Math.toRadians(256));
+                        wobbleGoalPos = new Pose2d(44, -70, Math.toRadians(256));
                         break;
 
                 }
@@ -100,8 +100,8 @@ public class autoTest extends LinearOpMode {
             webcam.stopStreaming();
             drive.setPoseEstimate(startPose);
 
-            // zero rings/not scanned
 
+            // zero rings/not scanned
             Trajectory GTB0out = drive.trajectoryBuilder(startPose)
                 .forward(12)
                 .build();
@@ -122,7 +122,7 @@ public class autoTest extends LinearOpMode {
                 .build();
 
             Trajectory GTB2_0 = drive.trajectoryBuilder(GrabWobbleTwo0.end())
-                .lineToSplineHeading(new Pose2d(-10, -58, Math.toRadians(256)))
+                .lineToSplineHeading(new Pose2d(-12, -65, Math.toRadians(256)))
                 .build();
 
             Trajectory GTB2StrafeOut0 = drive.trajectoryBuilder(GTB2_0.end())
@@ -130,7 +130,7 @@ public class autoTest extends LinearOpMode {
                 .build();
 
             Trajectory GoToShoot0 = drive.trajectoryBuilder(GTB2StrafeOut0.end())
-                .lineToSplineHeading(new Pose2d(-3, -37, Math.toRadians(75)))
+                .lineToSplineHeading(new Pose2d(-5, -34, Math.toRadians(75)))
                 .build();
 
             Trajectory Park0 = drive.trajectoryBuilder(GoToShoot0.end())
@@ -152,7 +152,7 @@ public class autoTest extends LinearOpMode {
                 .build();
 
             Trajectory GrabWobbleTwo1 = drive.trajectoryBuilder(GTB1StrafeOut1.end())
-                .lineToSplineHeading(new Pose2d(-43, -45, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(-43, -48, Math.toRadians(90)))
                 .build();
 
             Trajectory GTB2_1 = drive.trajectoryBuilder(GrabWobbleTwo1.end())
@@ -163,8 +163,12 @@ public class autoTest extends LinearOpMode {
                 .strafeRight(8)
                 .build();
 
-            Trajectory GoToShoot1 = drive.trajectoryBuilder(GTB2StrafeOut1.end())
-                .lineToSplineHeading(new Pose2d(-6, -40, Math.toRadians(75)))
+            Trajectory GTB2BackOut1 = drive.trajectoryBuilder(GTB2StrafeOut1.end())
+                .back(12)
+                .build();
+
+            Trajectory GoToShoot1 = drive.trajectoryBuilder(GTB2BackOut1.end())
+                .lineToSplineHeading(new Pose2d(-8, -38, Math.toRadians(75)))
                 .build();
 
             Trajectory Park1 = drive.trajectoryBuilder(GoToShoot1.end())
@@ -173,9 +177,12 @@ public class autoTest extends LinearOpMode {
 
 
             // four rings
-            Trajectory GTB4 = drive.trajectoryBuilder(startPose)
-                .splineToConstantHeading(new Vector2d(0, -24), 0)
-                .splineToLinearHeading(new Pose2d(wobbleGoalPos.getX(), wobbleGoalPos.getY()), wobbleGoalPos.getHeading())
+            Trajectory GTB4out = drive.trajectoryBuilder(startPose)
+                .forward(64)
+                .build();
+
+            Trajectory GTB4 = drive.trajectoryBuilder(GTB4out.end())
+                .lineToSplineHeading(new Pose2d(wobbleGoalPos.getX(), wobbleGoalPos.getY(), wobbleGoalPos.getHeading()))
                 .addDisplacementMarker( () -> {
                     wobbleDrop(turn_Servo, claw_Servo);
                 })
@@ -186,11 +193,11 @@ public class autoTest extends LinearOpMode {
                 .build();
 
             Trajectory GrabWobbleTwo4 = drive.trajectoryBuilder(GTB1StrafeOut4.end())
-                .lineToSplineHeading(new Pose2d(-43, -50, Math.toRadians(90)))
+                .lineToSplineHeading(new Pose2d(-38, -32, Math.toRadians(76.3)))
                 .build();
 
             Trajectory GTB2_4 = drive.trajectoryBuilder(GrabWobbleTwo4.end())
-                .lineToSplineHeading(new Pose2d(36, -64, Math.toRadians(256)))
+                .lineToSplineHeading(new Pose2d(30, -67, Math.toRadians(256)))
                 .build();
 
             Trajectory GTB2StrafeOut4 = drive.trajectoryBuilder(GTB2_4.end())
@@ -198,7 +205,7 @@ public class autoTest extends LinearOpMode {
                 .build();
 
             Trajectory GoToShoot4 = drive.trajectoryBuilder(GTB2StrafeOut4.end())
-                .lineToSplineHeading(new Pose2d(-6, -40, Math.toRadians(75)))
+                .lineToSplineHeading(new Pose2d(-7, -38, Math.toRadians(75)))
                 .build();
 
             Trajectory Park4 = drive.trajectoryBuilder(GoToShoot4.end())
@@ -276,6 +283,7 @@ public class autoTest extends LinearOpMode {
                 drive.followTrajectory(GTB2_1);
                 wobbleDrop(turn_Servo, claw_Servo);
                 drive.followTrajectory(GTB2StrafeOut1);
+                drive.followTrajectory(GTB2BackOut1);
                 drive.followTrajectory(GoToShoot1);
                 chargeUp(firing_Motor);
                 for (int i=0; i < 4; i++) { // Adjustment for servo weirdness
@@ -285,10 +293,11 @@ public class autoTest extends LinearOpMode {
                 drive.followTrajectory(Park1);
             }
             else if (RingDetector.height == RingDetector.Height.FOUR) {
+                drive.followTrajectory(GTB4out);
                 drive.followTrajectory(GTB4);
                 wobbleDrop(turn_Servo, claw_Servo);
                 drive.followTrajectory(GTB1StrafeOut4);
-                turn_Servo.setPosition(0.05);
+                turn_Servo.setPosition(0.1);
                 drive.followTrajectory(GrabWobbleTwo4);
                 wobbleGrab(turn_Servo, claw_Servo);
                 drive.followTrajectory(GTB2_4);
@@ -327,18 +336,19 @@ public class autoTest extends LinearOpMode {
     }
 
     public void wobbleGrab (Servo turn_Servo, Servo claw_Servo) {
-        turn_Servo.setPosition(0.01);
+        turn_Servo.setPosition(0.05);
         claw_Servo.setPosition(1);
         sleep(1000);
         turn_Servo.setPosition(0.6);
     }
 
     public void wobbleDrop (Servo turn_Servo, Servo claw_Servo) {
-        turn_Servo.setPosition(0.01);
+        turn_Servo.setPosition(0.05);
         sleep(500);
         claw_Servo.setPosition(0.8);
         sleep(200);
         turn_Servo.setPosition(0.6);
+        claw_Servo.setPosition(0.8);
     }
 
     private void shootOnce(Servo index_Servo, DcMotorEx firing_Motor) {
